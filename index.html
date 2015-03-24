@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Hackathlon</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+        <link rel="stylesheet" href="http://openlayers.org/en/v3.3.0/css/ol.css" type="text/css">
+        <style>
+            .body {
+                padding-top: 60px;
+            }
+        </style>
+    </head>
+    <body class="body">
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-right">
+                    <a href="#" class="active navbar-text">Home</a>
+                    <a href="#" class="navbar-text">Add data</a>
+                    <a href="#" class="navbar-text">About</a>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div id="open_layer_map"></div>
+            <div>
+                <input type="range" min="0" max="1000" id="time_slider"/>
+            </div>
+        </div>
+        <script src="http://openlayers.org/en/v3.3.0/build/ol.js" type="text/javascript"></script>
+        <script src="js/hackathlon.js" type="text/javascript"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function(){
+                var hackathlon = new Hack('open_layer_map');
+                hackathlon.init();
+            });
+        </script>
+    </body>
+</html>
