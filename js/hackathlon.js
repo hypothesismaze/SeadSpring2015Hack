@@ -21,5 +21,23 @@ var Hack = function(mapTarget){
           zoom: 4
         }));
         
+        dataSuppliers.forEach(function(supplier){
+            
+        });
    };
-  };
+   
+   var dataSuppliers = [];
+   
+   this.addDataSupplier = function(dataSupplier){
+       dataSuppliers.push(dataSupplier);
+   };
+};
+
+var DataSupplier = function(hack){
+  
+    this.getSupplyData = function(){
+        return [];
+    };
+    
+    hack.addDataSupplier(this);
+};
