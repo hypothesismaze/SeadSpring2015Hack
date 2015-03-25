@@ -74,7 +74,6 @@ Hack.MapPosition = function(map){
     };
     
     this.setPositionsOnMap = function(searchResults){
-       
        if($.isEmptyObject(searchResults) || $.isEmptyObject(searchResults.geometries)){
            deleteLayerIfExists(searchResults.repositoryName);
            return;
@@ -99,12 +98,11 @@ Hack.MapPosition = function(map){
     var deleteLayerIfExists = function(repositoryName, layer){
         if(!$.isEmptyObject(curPositionLayer[repositoryName])){
            curMap.removeLayer(curPositionLayer[repositoryName]);
-           if(layer === undefined){
-               delete curPositionLayer[repositoryName];
-           }
         }
         if(layer !== undefined){
             curPositionLayer[repositoryName] = layer;
+        } else {
+            delete curPositionLayer[repositoryName];
         }
     };
 };
