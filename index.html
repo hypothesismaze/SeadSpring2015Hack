@@ -30,15 +30,28 @@ and open the template in the editor.
         <div class="container">
             <div id="open_layer_map"></div>
             <div>
-                <input type="range" min="0" max="1000" id="time_slider"/>
+                <input type="range" min="0" max="1800" id="time_slider"/>
+            </div>
+            <div class="invisible" id="popup-container">
             </div>
         </div>
+        <script src="//code.jquery.com/jquery-1.11.2.min.js" type="text/javascript"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.min.js" type="text/javascript"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-sheetrock/0.3.0/dist/jquery.sheetrock.min.js" type="text/javascript"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/proj4js/2.2.2/proj4.js" type="text/javascript"></script>
         <script src="http://openlayers.org/en/v3.3.0/build/ol.js" type="text/javascript"></script>
         <script src="js/hackathlon.js" type="text/javascript"></script>
+        <script src="js/GoogleSpreadSheetSupplier.js" type="text/javascript"></script>
+        <script src="js/FileDataSupplier.js" type="text/javascript"></script>
         <script>
-            document.addEventListener('DOMContentLoaded', function(){
+            $(function(){
                 var hackathlon = new Hack('open_layer_map');
                 hackathlon.init();
+                
+                $('#time_slider').on('input', function(){
+                    console.log($(this).val());
+                    hackathlon.search($(this).val());
+                });
             });
         </script>
     </body>
