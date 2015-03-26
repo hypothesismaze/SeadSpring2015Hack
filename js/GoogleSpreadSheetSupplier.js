@@ -21,7 +21,7 @@ Hack.GoogleSpreadSheetSupplier = function(){
         this.fireChange = function(options){
             __external(
                     new Hack.Repository(
-                        'google spread sheet', 
+                        'google spreadsheet', 
                         formattedData, 
                         undefined, 
                         'www.google.com/thingy')

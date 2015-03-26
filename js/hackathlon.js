@@ -1,7 +1,7 @@
 
 var Hack = function(mapTarget){
     
-   var mapManager = new Hack.MapPosition(
+   var mapManager = new Hack.MapManager(
         new ol.Map({
             target: mapTarget,
             layers: [
@@ -24,6 +24,7 @@ var Hack = function(mapTarget){
         
         datasuppliers.push(new Hack.GoogleSpreadSheetSupplier());
         datasuppliers.push(new Hack.FileDataSupplier());
+//        datasuppliers.push(new Hack.TDARSupplier());
    };
    
    this.search = function(time){
@@ -54,19 +55,24 @@ Hack.Repository = function(repositoryName, geoJSonFeatures, projection, url){
     this.repositoryURL = url;
 };
 
-Hack.MapPosition = function(map){
+Hack.MapManager = function(map){
   
     var curMap = map;
     var curPositionLayer = {};
     var mapPopup = new Hack.Popup();
+//    var osHistorical = new Hack.OSOverlay();
     curMap.addOverlay(mapPopup.popupOverlay);
+//    curMap.addLayer(osHistorical.nsOS1900TileLayer);
+    
     
     var selectInteraction = new ol.interaction.Select();
     map.addInteraction(selectInteraction);
     selectInteraction.on('select', function(event){
-        selectInteraction.getFeatures().forEach(function(feature){
-           mapPopup.open(feature);
-        });
+        if(selectInteraction.getFeatures().getLength() === 0){
+            mapPopup.close();
+        } else {
+            mapPopup.open(selectInteraction.getFeatures().item(0));
+        }
     });
     
     this.setView = function(view){
@@ -81,9 +87,9 @@ Hack.MapPosition = function(map){
        
        var vectorFromResults = new ol.source.GeoJSON({
            'object': {
-            'type': 'FeatureCollection',
-            'crs': searchResults.featureDefinition,
-            'features': searchResults.geometries
+                'type': 'FeatureCollection',
+                'crs': searchResults.featureDefinition,
+                'features': searchResults.geometries
             }
         });
         
@@ -110,8 +116,10 @@ Hack.MapPosition = function(map){
 Hack.Popup = function(){
 
    var self = this;
-   var dialogContent = '<div id="dialog" style="background-color: yellow"><div id="feature_data"></div>' + 
-            '<div class="navbar"><a id="close" href="#">Close</a></div></div>';
+   var dialogContent = 
+           '<div id="dialog" style="background-color: yellow; border-radius:10px;border:2px solid brown">' +
+            '<div id="feature_data" style="margin:2px;"></div>' + 
+            '<div class="navbar"><a id="close" href="#" class="align-right">Close</a></div></div>';
     
     var FEATURE_TEMPLATE_URL = "<div>" + 
             'Name: <a href="{{URL}}">{{NAME}}</a>' + 
@@ -124,10 +132,16 @@ Hack.Popup = function(){
         return false;
     });
     popup.appendTo('body');
-
+    
     this.popupOverlay = new ol.Overlay({
        element: popup 
     });
+    
+    this.close = function(){
+        if(self.popupOverlay.getPosition() !== undefined){
+            popup.find('#close').trigger('click');
+        }
+    };
     
     this.open = function(feature){
         var html = applyTemplate(feature.getProperties());
@@ -146,4 +160,20 @@ Hack.Popup = function(){
         var extent = feature.getGeometry().getExtent();
         return [extent[0], extent[1]];
     };
+};
+
+Hack.OSOverlay = function(){
+    
+    this.nsOS1900TileLayer = new ol.layer.Tile({
+            source: new ol.source.XYZ({
+//              url: 'http://geo.nls.uk/mapdata3/os/6_inch_gb_1900/{z}/{x}/{y}.png',
+              url: 'http://nls-0.tileserver.com/NLS_API/{z}/{x}/{y}.jpg',
+              extent: ol.proj.transform([-14.169172,49.205882,4.393046,61.483786],
+                                     'EPSG:4326', 'EPSG:3857'),
+              minZoom: 1,
+              maxZoom: 17,
+              tilePixelRatio: 1
+            })
+          });
+
 };
